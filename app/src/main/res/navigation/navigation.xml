@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/nowPlaying">
+
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.songs.SongsFragment"
+        android:label="SongsFragment" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.player.PlayerFragment"
+        android:label="PlayerFragment" >
+        <argument
+            android:name="musicPosition"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumsFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.album.AlbumsFragment"
+        android:label="AlbumsFragment" />
+    <fragment
+        android:id="@+id/artistsFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.artist.ArtistsFragment"
+        android:label="ArtistsFragment" />
+    <fragment
+        android:id="@+id/nowPlaying"
+        android:name="com.example.mymusicplayer.ui.fragments.nowplaying.NowPlaying"
+        android:label="NowPlaying" >
+        <action
+            android:id="@+id/action_nowPlaying_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
+</navigation>
