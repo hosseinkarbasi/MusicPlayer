@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         ViewPagerAdapter(supportFragmentManager, lifecycle)
+        requestRuntimePermission()
 
     }
 
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 13) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "permission", Toast.LENGTH_SHORT).show()
-//                bottomNavigation()
+
             } else {
                 ActivityCompat.requestPermissions(
                     this,

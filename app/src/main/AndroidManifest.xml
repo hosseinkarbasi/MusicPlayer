@@ -18,20 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMusicPlayer">
         <activity
-            android:name=".ui.activity.PlayerActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
 
         <service android:name=".ui.fragments.MusicService" />
-
         <receiver android:name=".ui.fragments.NotificationReceiver" />
 
         <meta-data

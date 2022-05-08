@@ -11,10 +11,13 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.mymusicplayer.R
-import com.example.mymusicplayer.ui.fragments.songs.SongsFragment
+import com.example.mymusicplayer.ui.IMediaControl
+import com.example.mymusicplayer.ui.fragments.nowplaying.NowPlaying
+import com.example.mymusicplayer.ui.fragments.player.PlayerFragment
+import com.example.mymusicplayer.ui.fragments.player.PlayerFragment.Companion.songPosition
 import com.example.mymusicplayer.ui.fragments.songs.SongsFragment.Companion.musicList
-import com.example.mymusicplayer.ui.fragments.songs.SongsFragment.Companion.songPosition
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 class MusicService : Service() {
 
@@ -22,10 +25,34 @@ class MusicService : Service() {
     var mediaPlayer: MediaPlayer? = null
     lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
+    private lateinit var mediaControl: IMediaControl
 
     override fun onBind(intent: Intent?): IBinder? {
         mediaSession = MediaSessionCompat(this, "My Music")
         return myBinder
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val actionName = intent?.getStringExtra("ActionName")
+        if (actionName != null) {
+            when (actionName) {
+                "playPause" -> {
+                    mediaControl.playPauseMusic()
+                }
+                "next" -> {
+                    mediaControl.prevNextSong(true, baseContext)
+                }
+                "PREVIOUS" -> {
+                    mediaControl.prevNextSong(false, baseContext)
+                }
+                "exit" -> {
+                    stopForeground(true)
+                    exitProcess(1)
+                }
+            }
+        }
+
+        return super.onStartCommand(intent, flags, startId)
     }
 
     inner class MyBinder : Binder() {
@@ -44,13 +71,13 @@ class MusicService : Service() {
             baseContext,
             0,
             prevIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+           PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val playIntent = Intent(
             baseContext,
             NotificationReceiver::class.java
-        ).setAction(ApplicationClass.PLAY)
+        ).setAction(ApplicationClass.PLAYPause)
         val playPendingIntent = PendingIntent.getBroadcast(
             baseContext,
             0,
@@ -98,15 +125,15 @@ class MusicService : Service() {
             .setLargeIcon(image)
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
-                    .setMediaSession(SongsFragment.musicService?.mediaSession?.sessionToken)
+                    .setMediaSession(NowPlaying.musicService?.mediaSession?.sessionToken)
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
-            .addAction(R.drawable.ic_last, "Previous", prevPendingIntent)
+            .addAction(R.drawable.previous, "Previous", prevPendingIntent)
             .addAction(playPauseBtn, "Play", playPendingIntent)
-            .addAction(R.drawable.ic_shuffle, "Next", nextPendingIntent)
-            .addAction(R.drawable.ic_first_page, "Exit", exitPendingIntent)
+            .addAction(R.drawable.next, "Next", nextPendingIntent)
+            .addAction(R.drawable.close, "Exit", exitPendingIntent)
             .build()
 
         startForeground(13, notification)
@@ -121,13 +148,13 @@ class MusicService : Service() {
     @RequiresApi(Build.VERSION_CODES.M)
     fun createMediaPlayer() {
         try {
-            if (SongsFragment.musicService?.mediaPlayer == null) SongsFragment.musicService?.mediaPlayer =
+            if (NowPlaying.musicService?.mediaPlayer == null) NowPlaying.musicService?.mediaPlayer =
                 MediaPlayer()
-            SongsFragment.musicService?.mediaPlayer?.reset()
-            SongsFragment.musicService?.mediaPlayer?.setDataSource(musicList[songPosition].path)
-            SongsFragment.musicService?.mediaPlayer?.prepare()
-            SongsFragment.musicService?.mediaPlayer?.start()
-            SongsFragment.isPlaying = true
+            NowPlaying.musicService?.mediaPlayer?.reset()
+            NowPlaying.musicService?.mediaPlayer?.setDataSource(musicList[songPosition].path)
+            NowPlaying.musicService?.mediaPlayer?.prepare()
+            NowPlaying.musicService?.mediaPlayer?.start()
+            NowPlaying.isPlaying = true
 //            PlayerF.binding.btnPlay.setImageResource(R.drawable.ic_pause)
 //            NowPlaying.binding.tvStart.text =
 //                formatDuration(mediaPlayer!!.currentPosition.toLong())
@@ -137,7 +164,7 @@ class MusicService : Service() {
         } catch (e: Exception) {
             return
         }
-    }
+    } //TODO
 
     private fun formatDuration(duration: Long): String {
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -146,13 +173,17 @@ class MusicService : Service() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-//    fun seekBarSetup() {
-//        runnable = Runnable {
-//            PlayerFragment.binding.tvStart.text =
-//                formatDuration(mediaPlayer!!.currentPosition.toLong())
-//            PlayerFragment.binding.seekBar.progress = mediaPlayer!!.currentPosition
-//            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
-//        }
-//        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
-//    }
+    fun seekBarSetup() {
+        runnable = Runnable {
+            PlayerFragment.binding.tvStart.text =
+                formatDuration(mediaPlayer!!.currentPosition.toLong())
+            PlayerFragment.binding.seekBar.progress = mediaPlayer!!.currentPosition
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    } //TODO
+
+    fun setCallBack(mediaController: IMediaControl) {
+        mediaControl = mediaController
+    }
 }
