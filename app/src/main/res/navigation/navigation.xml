@@ -17,7 +17,7 @@
         app:destination="@id/playerFragment" />
     <fragment
         android:id="@+id/nowPlaying"
-        android:name="com.example.mymusicplayer.ui.fragments.nowplaying.NowPlaying"
+        android:name="com.example.mymusicplayer.ui.fragments.nowplaying.NowPlayingFragment"
         android:label="NowPlaying" />
     <fragment
         android:id="@+id/songsFragment2"

@@ -1,10 +1,11 @@
-package com.example.mymusicplayer.ui.fragments
+package com.example.mymusicplayer.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.mymusicplayer.App
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -14,19 +15,19 @@ class NotificationReceiver : BroadcastReceiver() {
         val serviceIntent = Intent(context, MusicService::class.java)
         if (actionName != null) {
             when (actionName) {
-                ApplicationClass.PLAYPause -> {
+                App.PLAYPause -> {
                     serviceIntent.putExtra("ActionName", "playPause")
                     context?.startService(serviceIntent)
                 }
-                ApplicationClass.NEXT -> {
+                App.NEXT -> {
                     serviceIntent.putExtra("ActionName", "next")
                     context?.startService(serviceIntent)
                 }
-                ApplicationClass.PREVIOUS -> {
+                App.PREVIOUS -> {
                     serviceIntent.putExtra("ActionName", "PREVIOUS")
                     context?.startService(serviceIntent)
                 }
-                ApplicationClass.EXIT -> {
+                App.EXIT -> {
                     serviceIntent.putExtra("ActionName", "exit")
                     context?.startService(serviceIntent)
                 }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mymusicplayer.data.Music
 import com.example.mymusicplayer.databinding.SongItemMaterialBinding
 
-class MusicAdapter: ListAdapter<Music, MusicAdapter.CustomViewHolder>(DiffCallBack()) {
+class SongAdapter : ListAdapter<Music, SongAdapter.CustomViewHolder>(DiffCallBack()) {
 
     private var itemClick: ((position: Int) -> Unit)? = null
 

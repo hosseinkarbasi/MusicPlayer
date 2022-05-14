@@ -1,11 +1,11 @@
-package com.example.mymusicplayer.ui.fragments
+package com.example.mymusicplayer
 
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 
-class ApplicationClass : Application() {
+class App : Application() {
 
     companion object {
         const val CHANNEL_ID = "channel1"

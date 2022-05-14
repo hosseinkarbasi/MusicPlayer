@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:elevation="8dp"
+        android:visibility="gone"
         app:defaultQueryHint="Search Song..."
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,12 +38,31 @@
             android:id="@+id/rv_music"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+            app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="@+id/search_songs"
             app:layout_constraintStart_toStartOf="@+id/search_songs"
             app:layout_constraintTop_toBottomOf="@+id/search_songs" />
+
     </soup.neumorphism.NeumorphCardView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/shuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
+        android:backgroundTint="#FB1F4A"
+        android:contentDescription="shuffle"
+        app:elevation="4dp"
+        app:icon="@drawable/ic_shuffle"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

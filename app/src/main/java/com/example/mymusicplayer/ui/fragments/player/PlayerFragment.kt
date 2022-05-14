@@ -6,11 +6,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.view.View
 import android.widget.SeekBar
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -18,36 +20,41 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.mymusicplayer.R
 import com.example.mymusicplayer.data.Music
 import com.example.mymusicplayer.databinding.PlayerFragmentBinding
-import com.example.mymusicplayer.ui.IMediaControl
-import com.example.mymusicplayer.ui.fragments.MusicService
-import com.example.mymusicplayer.ui.fragments.songs.SongsFragment
+import com.example.mymusicplayer.utils.IMediaControl
+import com.example.mymusicplayer.service.MusicService
+import com.example.mymusicplayer.ui.fragments.songs.SongsViewModel
+import com.example.mymusicplayer.utils.collectWithRepeatOnLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class PlayerFragment : Fragment(R.layout.player_fragment), ServiceConnection,
-    MediaPlayer.OnCompletionListener, IMediaControl {
+class PlayerFragment : Fragment(R.layout.player_fragment),
+    ServiceConnection,
+    MediaPlayer.OnCompletionListener,
+    IMediaControl {
 
+    private var _binding: PlayerFragmentBinding? = null
+    private val binding get() = _binding!!
     private val args by navArgs<PlayerFragmentArgs>()
+    private lateinit var runnable: Runnable
+    var musicService: MusicService? = null
+    private var repeat: Boolean = false
+    private val viewModel by activityViewModels<SongsViewModel>()
 
     companion object {
-        var musicService: MusicService? = null
-        lateinit var binding: PlayerFragmentBinding
         var songPosition: Int = 0
         val musicList = mutableListOf<Music>()
-        var repeat: Boolean = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = PlayerFragmentBinding.bind(view)
+        _binding = PlayerFragmentBinding.bind(view)
 
         val intent = Intent(requireContext(), MusicService::class.java)
         activity?.bindService(intent, this, Context.BIND_AUTO_CREATE)
         activity?.startService(intent)
 
-        musicList.addAll(SongsFragment.searchList)
-        songPosition = args.musicPosition
+        initMusicList()
 
         lifecycleScope.launch {
             delay(100L)
@@ -55,68 +62,62 @@ class PlayerFragment : Fragment(R.layout.player_fragment), ServiceConnection,
         }
 
         binding.btnPlay.setOnClickListener { playPauseMusic() }
-        binding.btnNext.setOnClickListener { prevNextSong(true, requireContext()) }
-        binding.btnBack.setOnClickListener { prevNextSong(false, requireContext()) }
+        binding.btnNext.setOnClickListener { prevNextSong(true) }
+        binding.btnBack.setOnClickListener { prevNextSong(false) }
         binding.btnShuffle.setOnClickListener { shuffle() }
         binding.btnRepeat.setOnClickListener { repeat() }
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) musicService?.mediaPlayer?.seekTo(progress)
             }
+
             override fun onStartTrackingTouch(p0: SeekBar?) = Unit
             override fun onStopTrackingTouch(p0: SeekBar?) = Unit
         })
     }
 
+    private fun initMusicList() {
+        viewModel.deviceMusic.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
+            musicList.clear()
+            musicList.addAll(it)
+        }
+        songPosition = args.musicPosition
+    }
+
     private fun repeat() {
         if (!repeat) {
             repeat = true
-            binding.btnRepeat.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.purple_500
-                )
-            )
+            binding.btnRepeat.setImageResource(R.drawable.ic_repeat_select)
         } else {
             repeat = false
-            binding.btnRepeat.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.teal_200
-                )
-            )
+            binding.btnRepeat.setImageResource(R.drawable.ic_repeat)
         }
     }
 
-    private fun setLayout() {
-        binding.tvSongName.text = musicList[songPosition].title
-        Glide.with(requireContext())
+    private fun setLayout() = binding.apply {
+        tvSongName.text = musicList[songPosition].title
+        Glide.with(binding.imgSong)
             .load(musicList[songPosition].imgUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
-            .into(binding.imgSong)
-        if (repeat) binding.btnRepeat.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.purple_500
-            )
-        )
+            .into(imgSong)
+        if (repeat)binding.btnRepeat.setImageResource(R.drawable.ic_repeat_select)
     }
 
-    private fun createMediaPlayer() {
+    private fun createMediaPlayer() = binding.apply {
         try {
             if (musicService?.mediaPlayer == null) musicService?.mediaPlayer = MediaPlayer()
             musicService?.mediaPlayer?.reset()
             musicService?.mediaPlayer?.setDataSource(musicList[songPosition].path)
             musicService?.mediaPlayer?.prepare()
             musicService?.mediaPlayer?.start()
-            binding.btnPlay.setImageResource(R.drawable.ic_pause)
-            binding.tvStart.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.tvEnd.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
-            binding.seekBar.progress = 0
-            binding.seekBar.max = musicService?.mediaPlayer!!.duration
-            musicService?.mediaPlayer?.setOnCompletionListener(this)
+            btnPlay.setImageResource(R.drawable.ic_pause)
+            tvStart.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            tvEnd.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            seekBar.progress = 0
+            seekBar.max = musicService?.mediaPlayer!!.duration
+            musicService?.mediaPlayer?.setOnCompletionListener(this@PlayerFragment)
         } catch (e: Exception) {
-            return
+            return@apply
         }
     }
 
@@ -132,11 +133,11 @@ class PlayerFragment : Fragment(R.layout.player_fragment), ServiceConnection,
         }
     }
 
-    override fun prevNextSong(increment: Boolean, context: Context) {
+    override fun prevNextSong(increment: Boolean) {
         if (increment) {
             setSongPosition(true)
-            setLayout()
             createMediaPlayer()
+            setLayout()
             musicService?.showNotification(R.drawable.ic_pause)
         } else {
             setSongPosition(false)
@@ -149,10 +150,11 @@ class PlayerFragment : Fragment(R.layout.player_fragment), ServiceConnection,
     private fun shuffle() {
         musicList.shuffle()
         setLayout()
-    } //TODO
+        createMediaPlayer()
+    }
 
     private fun setSongPosition(increment: Boolean) {
-        if (repeat) {
+        if (!repeat) {
             if (increment) {
                 if (musicList.size - 1 == songPosition) songPosition = 0
                 else songPosition++
@@ -170,13 +172,23 @@ class PlayerFragment : Fragment(R.layout.player_fragment), ServiceConnection,
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    private fun seekBarSetup() {
+        runnable = Runnable {
+            binding.tvStart.text =
+                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBar.progress = musicService?.mediaPlayer!!.currentPosition
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
-        musicService!!.setCallBack(this)
+        musicService?.setCallBack(this)
         createMediaPlayer()
         musicService?.showNotification(R.drawable.ic_pause)
-        musicService?.seekBarSetup()
+        seekBarSetup()
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
