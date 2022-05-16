@@ -11,6 +11,9 @@
         <argument
             android:name="musicPosition"
             app:argType="integer" />
+        <argument
+            android:name="albumKey"
+            app:argType="string" />
     </fragment>
     <action
         android:id="@+id/action_global_playerFragment"
@@ -18,9 +21,36 @@
     <fragment
         android:id="@+id/nowPlaying"
         android:name="com.example.mymusicplayer.ui.fragments.nowplaying.NowPlayingFragment"
-        android:label="NowPlaying" />
+        android:label="NowPlaying" >
+        <action
+            android:id="@+id/action_nowPlaying_to_albumDetailsFragment"
+            app:destination="@id/albumDetailsFragment" />
+        <action
+            android:id="@+id/action_nowPlaying_to_artistDetailsFragment"
+            app:destination="@id/artistDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/songsFragment2"
         android:name="com.example.mymusicplayer.ui.fragments.songs.SongsFragment"
         android:label="SongsFragment" />
+    <fragment
+        android:id="@+id/albumDetailsFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.album.AlbumDetailsFragment"
+        android:label="AlbumDetailsFragment" >
+        <argument
+            android:name="album"
+            app:argType="com.example.mymusicplayer.data.Album" />
+    </fragment>
+    <fragment
+        android:id="@+id/artistsFragment2"
+        android:name="com.example.mymusicplayer.ui.fragments.artist.ArtistsFragment"
+        android:label="ArtistsFragment" />
+    <fragment
+        android:id="@+id/artistDetailsFragment"
+        android:name="com.example.mymusicplayer.ui.fragments.artist.ArtistDetailsFragment"
+        android:label="ArtistDetailsFragment" >
+        <argument
+            android:name="artist"
+            app:argType="com.example.mymusicplayer.data.Artist" />
+    </fragment>
 </navigation>

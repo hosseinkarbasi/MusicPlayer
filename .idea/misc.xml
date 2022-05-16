@@ -20,8 +20,11 @@
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/activity_main.xml" value="0.16" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/activity_main2.xml" value="0.33" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/activity_player.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/album_details_fragment.xml" value="0.17037037037037037" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/album_item.xml" value="0.33" />
-        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/albums_fragment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/albums_fragment.xml" value="0.1" />
+        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/artist_details_fragment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/artist_item.xml" value="0.33" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/artists_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/content_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/fragment_first.xml" value="0.20416666666666666" />
@@ -31,7 +34,7 @@
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/player_fragment.xml" value="0.1" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/song_item.xml" value="0.25" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/song_item_material.xml" value="0.25" />
-        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/songs_fragment.xml" value="0.22" />
+        <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/layout/songs_fragment.xml" value="0.1" />
         <entry key="..\:/Users/Hossein/AndroidStudioProjects/MyMusicPlayer/app/src/main/res/menu/menu.xml" value="1.3" />
       </map>
     </option>

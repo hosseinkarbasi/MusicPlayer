@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Album(
+data class Artist(
     val title: String?,
     val music: MutableList<Music>?
 ) : Parcelable

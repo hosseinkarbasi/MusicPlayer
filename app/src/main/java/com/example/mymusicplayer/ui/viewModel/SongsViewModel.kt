@@ -1,4 +1,4 @@
-package com.example.mymusicplayer.ui.fragments.songs
+package com.example.mymusicplayer.ui.viewModel
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -6,7 +6,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mymusicplayer.data.Album
+import com.example.mymusicplayer.data.Artist
 import com.example.mymusicplayer.data.Music
+import com.example.mymusicplayer.utils.Helper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,11 +19,19 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     private var deviceMusicList = mutableListOf<Music>()
 
-    private val _deviceMusic: MutableStateFlow<List<Music>> = MutableStateFlow(deviceMusicList)
+    private val _deviceMusic: MutableStateFlow<List<Music>> = MutableStateFlow(emptyList())
     val deviceMusic = _deviceMusic.asStateFlow()
 
+    private val _artists: MutableStateFlow<List<Artist>> = MutableStateFlow(emptyList())
+    val artists = _artists.asStateFlow()
+
+    private val _albums: MutableStateFlow<List<Album>> = MutableStateFlow(emptyList())
+    val albums = _albums.asStateFlow()
+
     init {
-        getDeviceMusic()
+        getMusics()
+        getAlbums()
+        getArtists()
     }
 
     @SuppressLint("Range")
@@ -81,10 +92,26 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         return deviceMusicList
     }
 
-    private fun getDeviceMusic() {
+    private fun getMusics() {
         viewModelScope.launch {
             getAllAudio(getApplication()).let {
                 _deviceMusic.emit(it)
+            }
+        }
+    }
+
+    private fun getAlbums() {
+        Helper.buildSortedAlbums(deviceMusicList).let {
+            viewModelScope.launch {
+                _albums.emit(it)
+            }
+        }
+    }
+
+    private fun getArtists() {
+        Helper.buildSortedArtist(deviceMusicList).let {
+            viewModelScope.launch {
+                _artists.emit(it)
             }
         }
     }

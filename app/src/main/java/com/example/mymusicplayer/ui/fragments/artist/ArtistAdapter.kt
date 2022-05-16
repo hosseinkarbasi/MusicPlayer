@@ -1,4 +1,4 @@
-package com.example.mymusicplayer.ui.fragments.album
+package com.example.mymusicplayer.ui.fragments.artist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -10,25 +10,27 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.mymusicplayer.R
 import com.example.mymusicplayer.data.Album
+import com.example.mymusicplayer.data.Artist
 import com.example.mymusicplayer.databinding.AlbumItemBinding
+import com.example.mymusicplayer.databinding.ArtistItemBinding
 
-class AlbumAdapter : ListAdapter<Album, AlbumAdapter.CustomViewHolder>(DiffCallBack()) {
+class ArtistAdapter : ListAdapter<Artist, ArtistAdapter.CustomViewHolder>(DiffCallBack()) {
 
-    private var itemClick: ((album: Album) -> Unit)? = null
+    private var itemClick: ((album: Artist) -> Unit)? = null
 
-    inner class CustomViewHolder(private var binding: AlbumItemBinding) :
+    inner class CustomViewHolder(private var binding: ArtistItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: Album) {
+        fun bind(item: Artist) {
 
-            binding.albumNameTv.text = item.title
-            binding.albumSongCountTv.text = "${item.music?.size} song"
+            binding.artistNameTv.text = item.title
+            binding.artistSongCountTv.text = "${item.music?.size} song"
 
-            Glide.with(binding.albumImg)
+            Glide.with(binding.artistImg)
                 .load(item.music?.get(0)?.imgUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
-                .into(binding.albumImg)
+                .into(binding.artistImg)
 
             binding.root.setOnClickListener {
                 itemClick?.let {
@@ -40,7 +42,7 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.CustomViewHolder>(DiffCallB
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
         CustomViewHolder(
-            AlbumItemBinding.inflate(
+            ArtistItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -52,17 +54,17 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.CustomViewHolder>(DiffCallB
     }
 
 
-    fun onItemPosition(clickListener: (Album) -> Unit) {
+    fun onItemPosition(clickListener: (Artist) -> Unit) {
         itemClick = clickListener
     }
 
-    class DiffCallBack : DiffUtil.ItemCallback<Album>() {
+    class DiffCallBack : DiffUtil.ItemCallback<Artist>() {
 
-        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
+        override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
+        override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean {
             return oldItem == newItem
         }
     }

@@ -5,19 +5,30 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_album"
-        android:layout_width="match_parent"
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/neumorphCardView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:fastScrollEnabled="true"
-        android:backgroundTint="@color/main"
-        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:neumorph_backgroundColor="@color/background"
+        app:neumorph_shadowColorDark="@color/dark_shadow"
+        app:neumorph_shadowColorLight="@color/light_shadow"
+        app:neumorph_shadowElevation="5dp"
+        app:neumorph_shapeAppearance="@style/NeumorphismCard">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </soup.neumorphism.NeumorphCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

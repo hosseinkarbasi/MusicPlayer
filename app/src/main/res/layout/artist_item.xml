@@ -19,38 +19,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/album_img"
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/card_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:elevation="16dp"
-                android:src="@drawable/ic_launcher_background"
+                app:cardElevation="16dp"
+                app:cardCornerRadius="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/artist_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_launcher_background" />
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/album_name_tv"
+                android:id="@+id/artist_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="albumName"
-                app:layout_constraintStart_toEndOf="@+id/album_img"
+                app:layout_constraintStart_toEndOf="@+id/card_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/album_songCount_tv"
+                android:id="@+id/artist_songCount_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:text="songsCount"
-                app:layout_constraintStart_toEndOf="@+id/album_img"
-                app:layout_constraintTop_toBottomOf="@+id/album_name_tv" />
+                app:layout_constraintStart_toEndOf="@+id/card_image"
+                app:layout_constraintTop_toBottomOf="@+id/artist_name_tv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
