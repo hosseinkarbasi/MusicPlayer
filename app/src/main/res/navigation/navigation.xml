@@ -17,17 +17,29 @@
     </fragment>
     <action
         android:id="@+id/action_global_playerFragment"
-        app:destination="@id/playerFragment" />
+        app:destination="@id/playerFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
     <fragment
         android:id="@+id/nowPlaying"
         android:name="com.example.mymusicplayer.ui.fragments.nowplaying.NowPlayingFragment"
         android:label="NowPlaying" >
         <action
             android:id="@+id/action_nowPlaying_to_albumDetailsFragment"
-            app:destination="@id/albumDetailsFragment" />
+            app:destination="@id/albumDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_nowPlaying_to_artistDetailsFragment"
-            app:destination="@id/artistDetailsFragment" />
+            app:destination="@id/artistDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/songsFragment2"

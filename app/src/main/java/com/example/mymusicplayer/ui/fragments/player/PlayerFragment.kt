@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.mymusicplayer.App
 import com.example.mymusicplayer.R
@@ -98,6 +99,7 @@ class PlayerFragment : Fragment(R.layout.player_fragment),
         tvSongName.text = musicList[songPosition].title
         Glide.with(binding.imgSong)
             .load(musicList[songPosition].imgUri)
+            .transition(DrawableTransitionOptions.withCrossFade())
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
             .into(imgSong)
         if (repeat) binding.btnRepeat.setImageResource(R.drawable.ic_repeat_select)
@@ -288,5 +290,10 @@ class PlayerFragment : Fragment(R.layout.player_fragment),
         } catch (e: Exception) {
             return
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setLayout()
     }
 }

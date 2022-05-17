@@ -39,8 +39,7 @@ class MusicService : Service() {
                 }
             }
         }
-
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     inner class MyBinder : Binder() {
